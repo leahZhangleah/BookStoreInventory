@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Book Store Inventory</string>
+    <string name="book_detail_price_label">Price</string>
+    <string name="book_detail_quantity_label">Quantity</string>
+    <string name="book_detail_supplier_label">Supplier</string>
+    <string name="book_detail_supplier_phone_label">Phone Number:</string>
+    <string name="book_edit_delete_btn">Delete</string>
+    <string name="save_action_title">Save</string>
+    <string name="edit_action_title">Edit</string>
+    <string name="name_required">Name Required</string>
+    <string name="price_required">Price Required</string>
+    <string name="quantity_required">Quantity Required</string>
+    <string name="supplier_required">Supplier Required</string>
+    <string name="phone_required">Phone Required</string>
+    <string name="data_empty_message">Please fulfill required spaces</string>
+    <string name="edit_title">Edit a Book</string>
+    <string name="add_title">Add a Book</string>
 </resources>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditActivity"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/book_edit_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/book_edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Book Name" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_required_label"
+        android:visibility="gone"
+        android:textColor="@color/required_label_text_color"/>
+
+    <TextView
+        android:id="@+id/book_detail_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/book_detail_price_label" />
+
+    <EditText
+        android:id="@+id/book_edit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/price_required_label"
+        android:visibility="gone"
+        android:textColor="@color/required_label_text_color"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/book_detail_quantity_label"
+        android:text="@string/book_detail_quantity_label"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/book_edit_minus_btn"
+        android:background="@drawable/ic_indeterminate_check_box_black_24dp"/>
+    <EditText
+        android:id="@+id/book_edit_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/book_edit_plus_btn"
+        android:background="@drawable/ic_add_box_black_24dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quantity_required_label"
+        android:visibility="gone"
+        android:textColor="@color/required_label_text_color"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/book_detail_supplier_label"
+        android:text="@string/book_detail_supplier_label"/>
+    <EditText
+        android:id="@+id/book_edit_supplier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/supplier_required_label"
+        android:visibility="gone"
+        android:textColor="@color/required_label_text_color"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/book_detail_supplier_phone_label"
+        android:text="@string/book_detail_supplier_phone_label"/>
+    <EditText
+        android:id="@+id/book_edit_supplier_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_required_label"
+        android:visibility="gone"
+        android:textColor="@color/required_label_text_color"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/book_edit_delete_btn"
+        android:id="@+id/book_edit_delete_btn"/>
+
+</LinearLayout>
