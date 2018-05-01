@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.example.android.bookstoreinventory.data.BookContract;
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     ImageView mDetailPhotoV;
     TextView mDetailNameV,mDetailPriceV,mDetailQuantityV,mDetailSupplierV,mDetailSupplierPhoneV;
+    ImageButton mcallBtn;
     private static final int LOADER_ID = 1;
     Uri uriForDetail;
     @Override
@@ -35,9 +38,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mDetailQuantityV = (TextView) findViewById(R.id.book_detail_quantity);
         mDetailSupplierV = (TextView) findViewById(R.id.book_detail_supplier);
         mDetailSupplierPhoneV = (TextView) findViewById(R.id.book_detail_supplier_phone);
+        mcallBtn = (ImageButton) findViewById(R.id.book_detail_phone_btn);
 
-
-        //todo:set intent for call button
+        mcallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.fromParts("tel",mDetailSupplierPhoneV.getText().toString(),null));
+                startActivity(intent);
+            }
+        });
 
         //todo:set intent on photo view
 

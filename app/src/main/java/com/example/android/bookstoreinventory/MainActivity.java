@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.android.bookstoreinventory.data.BookContract;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,BookCursorAdapter.OnSaleBtnClickListener {
     private static final int LOADER_ID = 0;
     private Uri uri = BookContract.BookEntry.CONTENT_URI;
     BookCursorAdapter bookCursorAdapter;
@@ -44,10 +45,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getBaseContext(),"the row id of clicked item is: " + id + "position: "+position,Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this,DetailActivity.class);
                 Uri uriForDetail = ContentUris.withAppendedId(uri,id);
                 intent.setData(uriForDetail);
                 startActivity(intent);
+
             }
         });
     }
@@ -89,4 +92,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri returnedUri = getContentResolver().insert(uri,book1);
     }
 
+    @Override
+    public void onSaleBtnClick(int rowId) {
+            Uri uriToUpdate = ContentUris.withAppendedId(uri,rowId);
+            String[] projection = new String[]{BookContract.BookEntry.TABLE_COLUMN_QUANTITY};
+            Cursor cursor = getContentResolver().query(uriToUpdate,projection,null,null,null);
+            if (cursor.moveToFirst()){
+                int quantity = cursor.getInt(cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY));
+                if (quantity > 0){
+                    quantity -=1;
+                }
+                ContentValues values = new ContentValues();
+                values.put(BookContract.BookEntry.TABLE_COLUMN_QUANTITY,quantity);
+                getContentResolver().update(uriToUpdate,values,null,null);
+            }
+
+    }
 }

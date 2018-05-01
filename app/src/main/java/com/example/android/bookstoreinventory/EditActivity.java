@@ -1,8 +1,10 @@
 package com.example.android.bookstoreinventory;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -53,15 +55,44 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mEditPlusBtn = (Button) findViewById(R.id.book_edit_plus_btn);
         mEditDeleteBtn = (Button) findViewById(R.id.book_edit_delete_btn);
 
+        mEditDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteBook(uriToEdit);
+            }
+        });
+
         Intent intent = getIntent();
         uriToEdit = intent.getData();
         if (uriToEdit == null){
             setTitle(getString(R.string.add_title));
+            mEditDeleteBtn.setVisibility(View.GONE);
         }else{
             setTitle(getString(R.string.edit_title));
             getLoaderManager().initLoader(LOADER_ID,null,this);
         }
 
+        mEditMinusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditQuantity = Integer.parseInt(mEditQuantityV.getText().toString());
+                if (mEditQuantity > 0){
+                    mEditQuantity -= 1;
+                    mEditQuantityV.setText(Integer.toString(mEditQuantity));
+                }else{
+                    Toast.makeText(getBaseContext(),getString(R.string.quantity_less_than_zero_msg),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mEditPlusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditQuantity = Integer.parseInt(mEditQuantityV.getText().toString());
+                mEditQuantity += 1;
+                mEditQuantityV.setText(Integer.toString(mEditQuantity));
+            }
+        });
     }
 
     @Override
@@ -125,6 +156,40 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 intent.setData(uriToEdit);
                 NavUtils.navigateUpTo(this,intent);
             }
+        }
+    }
+
+    private void deleteBook(final Uri uriToEdit){
+        if (uriToEdit!= null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.delete_message);
+            builder.setPositiveButton(R.string.delete_positive_btn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (dialog!= null){
+                        int rowDeletedId = getContentResolver().delete(uriToEdit,null,null);
+                        if (rowDeletedId > 0){
+                            Toast.makeText(getBaseContext(),getString(R.string.delete_successful_msg),Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getBaseContext(),getString(R.string.delete_unsuccessful_msg),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    dialog.dismiss();
+                    finish();
+                    Intent intent = new Intent(EditActivity.this,MainActivity.class);
+                    NavUtils.navigateUpTo(EditActivity.this,intent);
+                }
+            });
+            builder.setNegativeButton(R.string.delete_negative_btn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (dialog != null){
+                        dialog.dismiss();
+                    }
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

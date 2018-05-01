@@ -55,7 +55,8 @@
         android:id="@+id/book_edit_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number" />
+        android:inputType="number"
+        android:text="@string/quantity_default_value"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
