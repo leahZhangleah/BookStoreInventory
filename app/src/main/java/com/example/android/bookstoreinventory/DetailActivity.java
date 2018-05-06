@@ -5,9 +5,13 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bookstoreinventory.data.BookContract;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     ImageView mDetailPhotoV;
@@ -32,7 +40,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         uriForDetail = intent.getData();
 
-        //mDetailPhotoV = (ImageView) findViewById(R.id.book_detail_photo);
+        mDetailPhotoV = (ImageView) findViewById(R.id.book_detail_photo);
         mDetailNameV = (TextView) findViewById(R.id.book_detail_name);
         mDetailPriceV = (TextView) findViewById(R.id.book_detail_price);
         mDetailQuantityV = (TextView) findViewById(R.id.book_detail_quantity);
@@ -65,7 +73,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 BookContract.BookEntry.TABLE_COLUMN_PRICE,
                 BookContract.BookEntry.TABLE_COLUMN_QUANTITY,
                 BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME,
-                BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER};
+                BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER,
+                BookContract.BookEntry.TABLE_COLUMN_PHOTO};
         switch (id){
             case LOADER_ID:
                 return new CursorLoader(this,uriForDetail,projection,null,null,null);
@@ -84,6 +93,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 int quantityColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY);
                 int supplierColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME);
                 int supplierPhoneColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER);
+                int photoColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PHOTO);
 
                 //byte[] photoByte = data.getBlob(photoColumnIndex);
                 String name = data.getString(nameColumnIndex);
@@ -91,8 +101,21 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 int quantity = data.getInt(quantityColumnIndex);
                 String supplier = data.getString(supplierColumnIndex);
                 int supplierPhone = data.getInt(supplierPhoneColumnIndex);
+                String photo = data.getString(photoColumnIndex);
 
+                Bitmap bitmap = null;
                 //todo: set photo for photoview
+                if (photo == null || photo.isEmpty()){
+                    mDetailPhotoV.setImageBitmap(bitmap);
+                }else{
+                    Uri photoUri = Uri.parse(photo);
+                    try{
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    mDetailPhotoV.setImageBitmap(bitmap);
+                }
 
                 mDetailNameV.setText(name);
                 mDetailPriceV.setText(String.valueOf(price));
@@ -106,6 +129,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //todo
+        mDetailPhotoV.setImageBitmap(null);
         mDetailNameV.setText(null);
         mDetailPriceV.setText(null);
         mDetailQuantityV.setText(null);
@@ -127,7 +151,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 intent.setData(uriForDetail);
                 startActivity(intent);
                 return true;
-                //todo:home
             default:
                 return super.onOptionsItemSelected(item);
         }

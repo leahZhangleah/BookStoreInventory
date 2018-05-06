@@ -22,4 +22,8 @@
     <string name="delete_unsuccessful_msg">Deletion failed</string>
     <string name="quantity_less_than_zero_msg">Quantity can not be less than 0</string>
     <string name="quantity_default_value">0</string>
+    <string name="discard_edit_message">Do you want to discard changes?</string>
+    <string name="empty_view_msg">Click plus button to start adding books.</string>
+    <string name="btm_dialog_take_photo">TAKE PHOTO</string>
+    <string name="btm_dialog_choose_photo">CHOOSE PHOTO</string>
 </resources>

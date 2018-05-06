@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.bookstoreinventory.data.BookContract;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 0;
     private Uri uri = BookContract.BookEntry.CONTENT_URI;
     BookCursorAdapter bookCursorAdapter;
+    TextView emptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bookCursorAdapter = new BookCursorAdapter(this,null);
         bookList.setAdapter(bookCursorAdapter);
         getLoaderManager().initLoader(LOADER_ID,null,this);
+
+        emptyView = (TextView) findViewById(R.id.empty_view);
+        bookList.setEmptyView(emptyView);
 
         FloatingActionButton floatingActionButton = findViewById(R.id.float_btn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Uri uriForDetail = ContentUris.withAppendedId(uri,id);
                 intent.setData(uriForDetail);
                 startActivity(intent);
-
             }
         });
     }
@@ -73,23 +77,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        bookCursorAdapter.swapCursor(data);
+        if (data!= null){
+            bookCursorAdapter.swapCursor(data);
+        }else{
+            emptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         bookCursorAdapter.swapCursor(null);
-    }
-
-    private void insertBook(){
-        ContentValues book1 = new ContentValues();
-        book1.put(BookContract.BookEntry.TABLE_COLUMN_NAME,"EAT PRAY LOVE");
-        book1.put(BookContract.BookEntry.TABLE_COLUMN_PRICE,19.99);
-        book1.put(BookContract.BookEntry.TABLE_COLUMN_QUANTITY,20);
-        book1.put(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME,"ABC MAGAZINE");
-        book1.put(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER,1234);
-
-        Uri returnedUri = getContentResolver().insert(uri,book1);
     }
 
     @Override
@@ -106,6 +103,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 values.put(BookContract.BookEntry.TABLE_COLUMN_QUANTITY,quantity);
                 getContentResolver().update(uriToUpdate,values,null,null);
             }
-
     }
 }

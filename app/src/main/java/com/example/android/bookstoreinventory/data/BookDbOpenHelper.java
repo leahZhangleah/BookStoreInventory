@@ -19,7 +19,8 @@ public class BookDbOpenHelper extends SQLiteOpenHelper {
                 + BookContract.BookEntry.TABLE_COLUMN_PRICE + " DECIMAL(2) NOT NULL,"
                 + BookContract.BookEntry.TABLE_COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0,"
                 + BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME +" TEXT NOT NULL,"
-                + BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER + " INTEGER NOT NULL"
+                + BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER + " INTEGER NOT NULL,"
+                + BookContract.BookEntry.TABLE_COLUMN_PHOTO + " TEXT"
                 + ");";
         db.execSQL(CREATE_SQL_TABLE);
     }

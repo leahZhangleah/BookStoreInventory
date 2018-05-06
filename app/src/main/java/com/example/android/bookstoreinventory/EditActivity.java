@@ -8,23 +8,40 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.bookstoreinventory.data.BookContract;
 
-public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,View.OnTouchListener{
+    private ImageButton mEditPhotoV;
     private  EditText mEditNameV,mEditPriceV,mEditQuantityV,mEditSupplierV,mEditSupplierPhoneV;
     private TextView mNameRequiredV, mPriceRequiredV, mQuantityRequiredV, mSupplierRequiredV, mPhoneRequiredV;
     private Button mEditMinusBtn,mEditPlusBtn,mEditDeleteBtn;
@@ -34,27 +51,49 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 1;
     private Uri uriToEdit;
     private Uri uri = BookContract.BookEntry.CONTENT_URI;
+    private boolean mIsTouched = false;
+    private static final int PHOTO_FROM_ACTION_CODE = 2;
+    private Uri selectedImageUri;
+    private  String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        //init views
+        mEditPhotoV = (ImageButton) findViewById(R.id.book_edit_photo);
         mEditNameV = (EditText) findViewById(R.id.book_edit_name);
         mEditPriceV = (EditText) findViewById(R.id.book_edit_price);
         mEditQuantityV = (EditText) findViewById(R.id.book_edit_quantity);
         mEditSupplierV = (EditText) findViewById(R.id.book_edit_supplier);
         mEditSupplierPhoneV =(EditText) findViewById(R.id.book_edit_supplier_phone);
 
+        //set touch listener for views to check if any change has been made
+        mEditPhotoV.setOnTouchListener(this);
+        mEditNameV.setOnTouchListener(this);
+        mEditPriceV.setOnTouchListener(this);
+        mEditQuantityV.setOnTouchListener(this);
+        mEditSupplierV.setOnTouchListener(this);
+        mEditSupplierPhoneV.setOnTouchListener(this);
+
+        //image btn click listener to choose or capture photo
+        mEditPhotoV.setOnClickListener(imageChooseClickListener);
+
+        //init views to remind user to fill in required info
         mNameRequiredV = (TextView) findViewById(R.id.name_required_label);
         mPriceRequiredV = (TextView) findViewById(R.id.price_required_label);
         mQuantityRequiredV = (TextView) findViewById(R.id.quantity_required_label);
         mSupplierRequiredV = (TextView) findViewById(R.id.supplier_required_label);
         mPhoneRequiredV = (TextView) findViewById(R.id.phone_required_label);
 
+        //btn init and touch listener
         mEditMinusBtn = (Button) findViewById(R.id.book_edit_minus_btn);
         mEditPlusBtn = (Button) findViewById(R.id.book_edit_plus_btn);
-        mEditDeleteBtn = (Button) findViewById(R.id.book_edit_delete_btn);
+        mEditMinusBtn.setOnTouchListener(this);
+        mEditPlusBtn.setOnTouchListener(this);
 
+        mEditDeleteBtn = (Button) findViewById(R.id.book_edit_delete_btn);
         mEditDeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +134,112 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         });
     }
 
+    //image btn click listener to choose or capture photo
+    private View.OnClickListener imageChooseClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File photoFile = null;
+            try{
+                photoFile = createImageFile();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            if (photoFile!=null){
+                selectedImageUri = FileProvider.getUriForFile(getBaseContext(),"com.example.android.fileprovider",photoFile);
+                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,selectedImageUri);
+            }
+
+            String title = "Photo From";
+            Intent chooserIntent = Intent.createChooser(pickIntent, title);
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takePhotoIntent});
+            startActivityForResult(chooserIntent, PHOTO_FROM_ACTION_CODE);
+        }
+    };
+    private File createImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_"+ timeStamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (!storageDir.exists()&&!storageDir.mkdirs()){
+            Log.d(EditActivity.class.getName(),"failed to create directory");
+        }
+        File externalFile = File.createTempFile(imageFileName,".jpg",storageDir);
+        Log.i(EditActivity.class.getName(),"the full directory is: "+externalFile);
+        mCurrentPhotoPath = externalFile.getAbsolutePath();
+        Log.i(MainActivity.class.getName(),"the current photo path is: "+mCurrentPhotoPath);
+        return externalFile;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PHOTO_FROM_ACTION_CODE) {
+            Bitmap bitmap = null;
+            if (data == null) {
+                //from camera
+                //todo
+                //selectedImageUri = Uri.fromFile(new File(mCurrentPhotoPath));
+                //selectedImageUri = Uri.fromFile(new File(photoPath));
+                Log.i(EditActivity.class.getName(), "selected image uri is:" + selectedImageUri + "iscamera is true");
+                //bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                try{
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),selectedImageUri);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            } else {
+                //from photo or gallery
+                try {
+                    selectedImageUri = data.getData();
+                    Log.i(EditActivity.class.getName(), "selected image uri is:" + selectedImageUri + "iscamera is false");
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            mEditPhotoV.setImageBitmap(bitmap);
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        mIsTouched = true;
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsTouched){
+            discardConfirmationDialog();
+        }else{
+            super.onBackPressed();
+        }
+    }
+    private void discardConfirmationDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.discard_edit_message);
+        builder.setPositiveButton(R.string.delete_positive_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog!= null){
+                    dialog.dismiss();
+                    finish();
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.delete_negative_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog!= null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu,menu);
@@ -107,17 +252,11 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.save_action:
                 saveBook();
                 return true;
-                //todo: case for homeup action
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
 
     private void saveBook(){
         //todo
@@ -132,6 +271,10 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         if (isValuesEmpty){
             Toast.makeText(this,getString(R.string.data_empty_message),Toast.LENGTH_SHORT).show();
         }else{
+            String mEditPhoto = null;
+            if (selectedImageUri != null){
+                mEditPhoto = selectedImageUri.toString();
+            }
             mEditName = mEditName.trim();
             mEditPrice = Double.parseDouble(price.trim());
             mEditQuantity = Integer.parseInt(quantity.trim());
@@ -145,13 +288,15 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             values.put(BookContract.BookEntry.TABLE_COLUMN_QUANTITY,mEditQuantity);
             values.put(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME,mEditSupplier);
             values.put(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER,mEditSupplierPhone);
+            if (mEditPhoto != null){
+                values.put(BookContract.BookEntry.TABLE_COLUMN_PHOTO,mEditPhoto);
+            }
             if (uriToEdit == null) {
                 getContentResolver().insert(uri, values);
                 finish();
             }else{
                 getContentResolver().update(uriToEdit, values, null, null);
                 finish();
-                //todo: navigate back to detail activity
                 Intent intent = new Intent();
                 intent.setData(uriToEdit);
                 NavUtils.navigateUpTo(this,intent);
@@ -238,7 +383,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 BookContract.BookEntry.TABLE_COLUMN_PRICE,
                 BookContract.BookEntry.TABLE_COLUMN_QUANTITY,
                 BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME,
-                BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER};
+                BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER,
+                BookContract.BookEntry.TABLE_COLUMN_PHOTO};
         switch (id){
             case LOADER_ID:
                 return new CursorLoader(this,uriToEdit,projection,null,null,null);
@@ -251,14 +397,14 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null){
             if (data.moveToFirst()){
-                //int photoColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PHOTO);
+                int photoColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PHOTO);
                 int nameColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_NAME);
                 int priceColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PRICE);
                 int quantityColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY);
                 int supplierColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_NAME);
                 int supplierPhoneColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER);
 
-               // byte[] photoByte = data.getBlob(photoColumnIndex);
+                String photo = data.getString(photoColumnIndex);
                 String name = data.getString(nameColumnIndex);
                 double price = data.getDouble(priceColumnIndex);
                 int quantity = data.getInt(quantityColumnIndex);
@@ -266,6 +412,18 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 int supplierPhone = data.getInt(supplierPhoneColumnIndex);
 
                 //todo: set photo for photoview
+                Bitmap bitmap = null;
+                if (photo == null || photo.isEmpty()){
+                    mEditPhotoV.setImageBitmap(bitmap);
+                }else{
+                    Uri photoUri = Uri.parse(photo);
+                    try{
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    mEditPhotoV.setImageBitmap(bitmap);
+                }
                 mEditNameV.setText(name);
                 mEditPriceV.setText(String.valueOf(price));
                 mEditQuantityV.setText(String.valueOf(quantity));
@@ -278,6 +436,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //todo: set photo for photoview
+        mEditPhotoV.setImageBitmap(null);
         mEditNameV.setText(null);
         mEditPriceV.setText(null);
         mEditQuantityV.setText(null);

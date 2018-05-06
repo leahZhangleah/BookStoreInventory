@@ -9,8 +9,10 @@
 
     <ImageButton
         android:id="@+id/book_edit_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:src = "@drawable/ic_launcher_background"
+        android:scaleType="centerCrop"/>
 
     <EditText
         android:id="@+id/book_edit_name"
