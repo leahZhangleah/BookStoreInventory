@@ -41,23 +41,19 @@ public class BookCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-        TextView cursorIdV= (TextView) view.findViewById(R.id.cursor_id);
         TextView nameTextV = (TextView) view.findViewById(R.id.book_name);
         TextView priceTextV = (TextView) view.findViewById(R.id.book_price);
         TextView quantityTextV = (TextView) view.findViewById(R.id.book_quantity);
         final Button saleBtn = (Button) view.findViewById(R.id.sale_btn);
 
-        int idColumnIndex = cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_ID);
         int nameColumnIndex = cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_NAME);
         int priceColumnIndex = cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY);
 
-        final int cursorId = cursor.getInt(idColumnIndex);
         String name = cursor.getString(nameColumnIndex);
         double price = cursor.getDouble(priceColumnIndex);
         int cursorQuantity = cursor.getInt(quantityColumnIndex);
 
-        cursorIdV.setText(String.valueOf(cursorId));
         nameTextV.setText(name);
         priceTextV.setText(String.valueOf(price));
         quantityTextV.setText(String.valueOf(cursorQuantity));

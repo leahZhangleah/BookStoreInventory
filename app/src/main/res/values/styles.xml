@@ -7,5 +7,43 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="detail_label_tv">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/detail_view_label_height</item>
+    </style>
+    <style name="detail_value_tv">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/detail_view_value_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/detail_view_value_txt_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:drawableBottom">@drawable/detail_divider</item>
+        <item name="android:layout_marginLeft">@dimen/vertical_margin</item>
+    </style>
+    <style name="required_view">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/horizontal_margin</item>
+        <item name="android:textColor">@color/required_label_text_color</item>
+    </style>
+    <style name="edit_view_label">
+        <item name="android:layout_width">@dimen/edit_view_label_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="edit_view_value">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/horizontal_margin</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:ems">5</item>
+        <item name="android:textSize">@dimen/detail_view_value_txt_size</item>
+    </style>
+    <style name="edit_view_linearlayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/book_item_height</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
 </resources>

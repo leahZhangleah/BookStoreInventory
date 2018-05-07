@@ -9,7 +9,9 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/book_list">
+        android:id="@+id/book_list"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin">
     </ListView>
     <TextView
         android:layout_width="wrap_content"
@@ -22,8 +24,9 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
+        android:layout_margin="@dimen/float_btn_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:id="@+id/float_btn"/>
+        android:id="@+id/float_btn"
+        android:src="@drawable/ic_add_black_24dp"/>
 </RelativeLayout>

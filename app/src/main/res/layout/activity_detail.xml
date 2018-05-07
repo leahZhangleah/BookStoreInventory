@@ -1,60 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools = "http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/horizontal_margin"
+    android:layout_marginRight="@dimen/horizontal_margin"
     android:orientation="vertical"
     tools:context=".DetailActivity">
-    <ImageView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/book_detail_photo"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginBottom="@dimen/vertical_margin">
+
+        <ImageView
+            android:id="@+id/book_detail_photo"
+            android:layout_width="@dimen/photo_width"
+            android:layout_height="@dimen/photo_height"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:background="@drawable/transparent_with_edge_bg"/>
+
+        <TextView
+            android:id="@+id/book_detail_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:text="Eat pray love"
+            android:layout_marginLeft="@dimen/horizontal_margin"
+            android:textSize="@dimen/detail_view_value_txt_size"/>
+    </LinearLayout>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Eat pray love"
-        android:id="@+id/book_detail_name"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/book_detail_price_label"
-        android:text="@string/book_detail_price_label"/>
+        style="@style/detail_label_tv"
+        android:text="@string/book_detail_price_label" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_price" />
+        android:id="@+id/book_detail_price"
+        style="@style/detail_value_tv"
+        tools:text="19.99" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/book_detail_quantity_label"
-        android:text="@string/book_detail_quantity_label"/>
+        style="@style/detail_label_tv"
+        android:text="@string/book_detail_quantity_label" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_quantity" />
+        android:id="@+id/book_detail_quantity"
+        style="@style/detail_value_tv"
+        tools:text="20" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/book_detail_supplier_label"
-        android:text="@string/book_detail_supplier_label"/>
+        style="@style/detail_label_tv"
+        android:text="@string/book_detail_supplier_label" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_supplier" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_supplier_phone_label"
-        android:text="@string/book_detail_supplier_phone_label"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_supplier_phone" />
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_phone_btn"
-        android:src="@drawable/ic_phone_black_24dp"/>
+        android:id="@+id/book_detail_supplier"
+        style="@style/detail_value_tv"
+        tools:text="china" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/book_item_height"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/book_detail_supplier_phone_label"
+                style="@style/detail_label_tv"
+                android:text="@string/book_detail_supplier_phone_label" />
+
+            <TextView
+                android:id="@+id/book_detail_supplier_phone"
+                style="@style/detail_value_tv"
+                tools:text="136" />
+        </LinearLayout>
+        <ImageButton
+            android:id="@+id/book_detail_phone_btn"
+            android:layout_width="@dimen/book_item_btn_width"
+            android:layout_height="@dimen/book_item_btn_height"
+            android:src="@drawable/ic_phone_black_24dp"
+            android:background="@drawable/phone_call_btn_bg"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
 
 </LinearLayout>

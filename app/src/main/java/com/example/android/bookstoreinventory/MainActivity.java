@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -98,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 int quantity = cursor.getInt(cursor.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY));
                 if (quantity > 0){
                     quantity -=1;
+                }else{
+                    Toast.makeText(this,getString(R.string.quantity_sold_out_msg),Toast.LENGTH_SHORT).show();
                 }
                 ContentValues values = new ContentValues();
                 values.put(BookContract.BookEntry.TABLE_COLUMN_QUANTITY,quantity);

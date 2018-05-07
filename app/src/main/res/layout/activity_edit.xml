@@ -5,110 +5,146 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/horizontal_margin"
+    android:layout_marginRight="@dimen/horizontal_margin">
 
-    <ImageButton
-        android:id="@+id/book_edit_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        tools:src = "@drawable/ic_launcher_background"
-        android:scaleType="centerCrop"/>
-
-    <EditText
-        android:id="@+id/book_edit_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Book Name" />
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginBottom="@dimen/vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="@dimen/photo_width"
+            android:layout_height="@dimen/photo_height">
+            <ImageView
+                android:id="@+id/book_edit_photo"
+                android:layout_width="@dimen/photo_width"
+                android:layout_height="@dimen/photo_height"
+                android:background="@drawable/transparent_with_edge_bg"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/add_photo_tv"
+                android:id="@+id/add_photo_tv"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/book_edit_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_name_hint"
+                android:ems="10"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                app:backgroundTint="@color/colorAccent"/>
+            <TextView
+                android:id="@+id/name_required_label"
+                tools:text= "@string/name_required"
+                style = "@style/required_view"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        style="@style/edit_view_linearlayout">
+        <TextView
+            android:id="@+id/book_detail_price_label"
+            style="@style/edit_view_label"
+            android:text="@string/book_detail_price_label" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/book_edit_price"
+            android:inputType="numberDecimal"
+            style="@style/edit_view_value"
+            tools:text = "2.79"
+            app:backgroundTint="@color/colorAccent"/>
+    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name_required_label"
-        android:visibility="gone"
-        android:textColor="@color/required_label_text_color"/>
-
-    <TextView
-        android:id="@+id/book_detail_price_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/book_detail_price_label" />
-
-    <EditText
-        android:id="@+id/book_edit_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/price_required_label"
-        android:visibility="gone"
-        android:textColor="@color/required_label_text_color"/>
+        tools:text= "@string/price_required"
+        style = "@style/required_view"/>
+
+    <LinearLayout
+        style="@style/edit_view_linearlayout">
+        <TextView
+            style="@style/edit_view_label"
+            android:id="@+id/book_detail_quantity_label"
+            android:text="@string/book_detail_quantity_label"/>
+        <Button
+            android:layout_width="@dimen/book_item_btn_width"
+            android:layout_height="@dimen/book_item_btn_height"
+            android:id="@+id/book_edit_minus_btn"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/horizontal_margin"
+            android:background="@drawable/ic_indeterminate_check_box_black_24dp"/>
+        <EditText
+            android:id="@+id/book_edit_quantity"
+            android:layout_width="@dimen/book_item_btn_width"
+            android:layout_height="@dimen/book_item_btn_height"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:inputType="number"
+            android:background="@drawable/transparent_with_edge_bg"
+            android:text="@string/quantity_default_value"/>
+        <Button
+            android:layout_width="@dimen/book_item_btn_width"
+            android:layout_height="@dimen/book_item_btn_height"
+            android:id="@+id/book_edit_plus_btn"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_add_box_black_24dp"/>
+    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_quantity_label"
-        android:text="@string/book_detail_quantity_label"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_edit_minus_btn"
-        android:background="@drawable/ic_indeterminate_check_box_black_24dp"/>
-    <EditText
-        android:id="@+id/book_edit_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:text="@string/quantity_default_value"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_edit_plus_btn"
-        android:background="@drawable/ic_add_box_black_24dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/quantity_required_label"
-        android:visibility="gone"
-        android:textColor="@color/required_label_text_color"/>
-
+        style="@style/required_view"
+        tools:text="@string/quantity_required"/>
+    <LinearLayout
+        style="@style/edit_view_linearlayout">
+        <TextView
+            style="@style/edit_view_label"
+            android:id="@+id/book_detail_supplier_label"
+            android:text="@string/book_detail_supplier_label"/>
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/book_edit_supplier"
+            style="@style/edit_view_value"
+            android:inputType="textCapWords"
+            app:backgroundTint="@color/colorAccent"/>
+    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_supplier_label"
-        android:text="@string/book_detail_supplier_label"/>
-    <EditText
-        android:id="@+id/book_edit_supplier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/supplier_required_label"
-        android:visibility="gone"
-        android:textColor="@color/required_label_text_color"/>
+        style="@style/required_view"
+        tools:text="@string/supplier_required"/>
+    <LinearLayout
+        style="@style/edit_view_linearlayout">
+        <TextView
+            style="@style/edit_view_label"
+            android:id="@+id/book_detail_supplier_phone_label"
+            android:text="@string/book_detail_supplier_phone_label"/>
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/book_edit_supplier_phone"
+            style="@style/edit_view_value"
+            android:inputType="phone"
+            android:ems="8"
+            app:backgroundTint="@color/colorAccent"
+            android:maxLength="14"/>
+    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/book_detail_supplier_phone_label"
-        android:text="@string/book_detail_supplier_phone_label"/>
-    <EditText
-        android:id="@+id/book_edit_supplier_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/phone_required_label"
-        android:visibility="gone"
-        android:textColor="@color/required_label_text_color"/>
+        tools:text="@string/phone_required"
+        style="@style/required_view"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/book_edit_delete_btn"
-        android:id="@+id/book_edit_delete_btn"/>
-
+        android:id="@+id/book_edit_delete_btn"
+        android:background = "@drawable/transparent_with_edge_bg" />
 </LinearLayout>

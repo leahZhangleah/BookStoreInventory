@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Book Store Inventory</string>
-    <string name="book_detail_price_label">Price</string>
+    <string name="book_detail_price_label">Price ($)</string>
     <string name="book_detail_quantity_label">Quantity</string>
     <string name="book_detail_supplier_label">Supplier</string>
-    <string name="book_detail_supplier_phone_label">Phone Number:</string>
+    <string name="book_detail_supplier_phone_label">Phone:</string>
     <string name="book_edit_delete_btn">Delete</string>
     <string name="save_action_title">Save</string>
     <string name="edit_action_title">Edit</string>
@@ -26,4 +26,11 @@
     <string name="empty_view_msg">Click plus button to start adding books.</string>
     <string name="btm_dialog_take_photo">TAKE PHOTO</string>
     <string name="btm_dialog_choose_photo">CHOOSE PHOTO</string>
+    <string name="quantity_sold_out_msg">This item is sold out</string>
+    <string name="price_label">$</string>
+    <string name="quantity_label">Qty:</string>
+    <string name="sale_btn_text">SALE</string>
+    <string name="book_name_hint">Book Name</string>
+    <string name="phone_length_too_long_msg">Phone number can not be longer than 14 digits</string>
+    <string name="add_photo_tv">Add Photo</string>
 </resources>

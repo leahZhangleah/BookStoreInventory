@@ -5,26 +5,16 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.android.bookstoreinventory.data.BookContract;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     ImageView mDetailPhotoV;
@@ -87,7 +77,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null){
             if (data.moveToFirst()){
-                //int photoColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PHOTO);
                 int nameColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_NAME);
                 int priceColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PRICE);
                 int quantityColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_QUANTITY);
@@ -95,40 +84,31 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 int supplierPhoneColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_SUPPLIER_PHONE_NUMBER);
                 int photoColumnIndex = data.getColumnIndex(BookContract.BookEntry.TABLE_COLUMN_PHOTO);
 
-                //byte[] photoByte = data.getBlob(photoColumnIndex);
                 String name = data.getString(nameColumnIndex);
                 double price = data.getDouble(priceColumnIndex);
                 int quantity = data.getInt(quantityColumnIndex);
                 String supplier = data.getString(supplierColumnIndex);
-                int supplierPhone = data.getInt(supplierPhoneColumnIndex);
-                String photo = data.getString(photoColumnIndex);
+                String supplierPhone = data.getString(supplierPhoneColumnIndex);
+                String photoPath = data.getString(photoColumnIndex);
 
-                Bitmap bitmap = null;
-                //todo: set photo for photoview
-                if (photo == null || photo.isEmpty()){
-                    mDetailPhotoV.setImageBitmap(bitmap);
+                if (photoPath == null || photoPath.isEmpty()){
+                    //mDetailPhotoV.setImageBitmap(null);
+                    mDetailPhotoV.setBackgroundResource(R.drawable.icon_book_blue);
                 }else{
-                    Uri photoUri = Uri.parse(photo);
-                    try{
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                    mDetailPhotoV.setImageBitmap(bitmap);
+                    ImageUtils.setPic(photoPath,mDetailPhotoV);
                 }
 
                 mDetailNameV.setText(name);
                 mDetailPriceV.setText(String.valueOf(price));
                 mDetailQuantityV.setText(String.valueOf(quantity));
                 mDetailSupplierV.setText(supplier);
-                mDetailSupplierPhoneV.setText(String.valueOf(supplierPhone));
+                mDetailSupplierPhoneV.setText(supplierPhone);
             }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //todo
         mDetailPhotoV.setImageBitmap(null);
         mDetailNameV.setText(null);
         mDetailPriceV.setText(null);
